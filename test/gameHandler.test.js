@@ -10,7 +10,7 @@ describe("getGameTest", function () {
   it("Should return error if trying to get game which doesnt exist", function () {
     const gameHandler = new GameHandler();
 
-    gameHandler.createGame("testId", "marko");
+    gameHandler.createGame("testId", "bob");
 
     try {
       const result = gameHandler.getGame("testId2");
@@ -20,13 +20,13 @@ describe("getGameTest", function () {
   });
   it("Should return game if it exists", function () {
     const gameHandler = new GameHandler();
-    gameHandler.createGame("testId", "marko");
+    gameHandler.createGame("testId", "bob");
     const result = gameHandler.getGame("testId");
     const expectedResult = {
       id: "testId",
       players: [
         {
-          name: "marko",
+          name: "bob",
           move: null,
         },
       ],
@@ -39,7 +39,7 @@ describe("addPlayerTest", function () {
   it("Should return error if trying to join game which doesnt exist", function () {
     const gameHandler = new GameHandler();
 
-    gameHandler.createGame("testId", "marko");
+    gameHandler.createGame("testId", "bob");
 
     try {
       const result = gameHandler.addPlayer("testId2");
@@ -49,14 +49,14 @@ describe("addPlayerTest", function () {
   });
   it("Should join game if it exists", function () {
     const gameHandler = new GameHandler();
-    gameHandler.createGame("testId", "marko");
+    gameHandler.createGame("testId", "bob");
     gameHandler.addPlayer("testId", "john");
     const result = gameHandler.getGame("testId");
     const expectedResult = {
       id: "testId",
       players: [
         {
-          name: "marko",
+          name: "bob",
           move: null,
         },
         {

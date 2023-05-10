@@ -6,6 +6,7 @@ const GameHandler = function () {
 
   GameHandler.prototype.makeMove = (gameId, player, move) => {
     let game = this.getGame(gameId);
+    if (game.winner) throw Error("Game is already finished");
     if (game.players.length < 2) {
       throw new Error("Missing second player");
     }
@@ -32,6 +33,7 @@ const GameHandler = function () {
 
   GameHandler.prototype.addPlayer = (gameId, player) => {
     let game = this.getGame(gameId);
+    if (game.winner) throw Error("Game is already finished");
     if (game.players.length === 1) {
       game.players.push({ name: player, move: null });
       this.updateGame(game);
@@ -58,9 +60,14 @@ const GameHandler = function () {
   };
 
   GameHandler.prototype.getGame = (gameId) => {
-    const result = gameCache.get(gameId);
-    if (result) return result;
-    else throw new Error("Game not found");
+    const game = gameCache.get(gameId);
+
+    if (game) {
+      if (game.players[0].move && game.players[1].move) {
+        return this.calculateWinner(game);
+      }
+      return game;
+    } else throw new Error("Game not found");
   };
 
   GameHandler.prototype.calculateWinner = (game) => {
@@ -71,10 +78,12 @@ const GameHandler = function () {
       mod(playerOneMove - playerTwoMove, validMoves.length) <
       validMoves.length / 2
     ) {
-      return game.players[0].name + " wins";
+      game.winner = game.players[0].name;
     } else {
-      return game.players[1].name + " wins";
+      game.winner = game.players[1].name;
     }
+    this.updateGame(game);
+    return game;
   };
 
   const mod = (a, b) => {
